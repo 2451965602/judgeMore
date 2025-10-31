@@ -1,0 +1,17 @@
+package cache
+
+import (
+	"github.com/redis/go-redis/v9"
+	client "judgeMore/pkg/ba"
+	"judgeMore/pkg/constants"
+)
+
+var ca *redis.Client
+
+func Init() {
+	var err error
+	ca, err = client.NewRedisClient(constants.RedisDBUser)
+	if err != nil {
+		panic(err)
+	}
+}
