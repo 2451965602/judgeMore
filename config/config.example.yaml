@@ -8,14 +8,10 @@ mysql:
 smtp:
   host: "smtp.163.com"
   port: 465
-  user: "m17850991643@163.com"
-  password: "DPe3RHC7Ez7eCbWB"
-  from: "m17850991643@163.com"
+  user: "xx@163.com"
+  password: "xx"
+  from: "xx@163.com"
   from_name: "judgeMore"
-
-
-etcd:
-  addr: 127.0.0.1:2379
 
 redis:
   addr: 127.0.0.1:6379
@@ -24,7 +20,7 @@ redis:
 
 services:
   main:
-    name : gateway
+    name : main
     load-balance: true
     addr:
       - 0.0.0.0:9999

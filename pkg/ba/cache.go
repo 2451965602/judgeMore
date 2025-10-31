@@ -14,10 +14,8 @@ func NewRedisClient(db int) (*redis.Client, error) {
 		return nil, errors.New("redis config is nil")
 	}
 	client := redis.NewClient(&redis.Options{
-		Addr:     config.Redis.Addr,
-		Username: config.Redis.Username,
-		Password: config.Redis.Password,
-		DB:       db,
+		Addr: config.Redis.Addr,
+		DB:   db,
 	})
 	if _, err := client.Ping(ctx).Result(); err != nil {
 		return nil, errno.NewErrNo(errno.InternalRedisErrorCode, "Connect falied"+err.Error())
