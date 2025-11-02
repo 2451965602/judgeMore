@@ -3,7 +3,6 @@ package mysql
 import (
 	"context"
 	"errors"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"gorm.io/gorm"
 	"judgeMore/biz/service/model"
 	"judgeMore/pkg/constants"
@@ -38,7 +37,6 @@ func CreateUser(ctx context.Context, user *model.User) (string, error) {
 		Table(constants.TableUser).
 		Create(userInfo).
 		Error
-	hlog.Info(err)
 	if err != nil {
 		return "", err
 	}

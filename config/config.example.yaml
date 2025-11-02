@@ -9,9 +9,21 @@ smtp:
   host: "smtp.163.com"
   port: 465
   user: "xx@163.com"
-  password: "xx"
-  from: "xx@163.com"
+  password: "xxxxxxx"
+  from: "xxxxxx@163.com"
   from_name: "judgeMore"
+
+openai:
+  api-key: ""
+  api-model: ""
+  api-url: ""
+oss:
+  bucket: ""
+  accessKey: ""
+  secretKey: ""
+  domain: "https://portal.qiniu.com/"
+  region: ""
+
 
 redis:
   addr: 127.0.0.1:6379

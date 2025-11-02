@@ -10,11 +10,11 @@ import (
 )
 
 func IsKeyExist(ctx context.Context, key string) bool {
-	return ca.Exists(ctx, key).Val() == 1
+	return userCa.Exists(ctx, key).Val() == 1
 }
 
 func GetCodeCache(ctx context.Context, key string) (code string, err error) {
-	value, err := ca.Get(ctx, key).Result()
+	value, err := userCa.Get(ctx, key).Result()
 	if err != nil {
 		return "", errno.NewErrNo(errno.InternalRedisErrorCode, "write code to cache error:"+err.Error())
 	}
@@ -31,11 +31,19 @@ func PutCodeToCache(ctx context.Context, key string) (code string, err error) {
 	timeNow := time.Now().Unix()
 	value := fmt.Sprintf("%s_%d", code, timeNow)
 	expiration := 10 * time.Minute
-	err = ca.Set(ctx, key, value, expiration).Err()
+	err = userCa.Set(ctx, key, value, expiration).Err()
 	if err != nil {
 		return "", errno.NewErrNo(errno.InternalRedisErrorCode, "write code to cache error:"+err.Error())
 	}
 	return code, nil
+}
+
+func DeleteCodeCache(ctx context.Context, key string) error {
+	err := userCa.Del(ctx, key).Err()
+	if err != nil {
+		return errno.NewErrNo(errno.InternalRedisErrorCode, "delete code from cache error:"+err.Error())
+	}
+	return nil
 }
 
 // 生成指定位数的随机验证码（字母+数字）

@@ -22,6 +22,8 @@ var (
 	Volcengine    *volcengine
 	Upyun         *upyun
 	Smtp          *smtp
+	OpenAI        *openAI
+	Oss           *oss
 	Rocketmq      *rocketmq
 	Otel          *otel
 	Administrator *administrator
@@ -62,8 +64,11 @@ func configMapping(srv string) {
 	Redis = &c.Redis
 	Kafka = &c.Kafka
 	Etcd = &c.Etcd
+	OpenAI = &c.OpenAI
 	Smtp = &c.Smtp
+	Oss = &c.Oss
 	Otel = &c.Otel
+
 	Service = getService(srv)
 }
 

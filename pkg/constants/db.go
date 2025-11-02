@@ -1,5 +1,7 @@
 package constants
 
 const (
-	TableUser = "users"
+	TableUser           = "users"
+	TableEvent          = "student_events"
+	TableReconizedEvent = "recognized_events"
 )

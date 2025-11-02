@@ -19,8 +19,8 @@ struct LoginRequest{
     2: required string password,
 }
 struct LoginResponse{
-    1: required model.UserInfo data,
-    2: required model.BaseResp base,
+    1: required model.BaseResp base,
+    2: required model.UserInfo data,
 }
 // logout
 struct LogoutReq {

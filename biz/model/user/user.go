@@ -730,8 +730,8 @@ func (p *LoginRequest) String() string {
 }
 
 type LoginResponse struct {
-	Data *model.UserInfo `thrift:"data,1,required" form:"data,required" json:"data,required" query:"data,required"`
-	Base *model.BaseResp `thrift:"base,2,required" form:"base,required" json:"base,required" query:"base,required"`
+	Base *model.BaseResp `thrift:"base,1,required" form:"base,required" json:"base,required" query:"base,required"`
+	Data *model.UserInfo `thrift:"data,2,required" form:"data,required" json:"data,required" query:"data,required"`
 }
 
 func NewLoginResponse() *LoginResponse {
@@ -739,15 +739,6 @@ func NewLoginResponse() *LoginResponse {
 }
 
 func (p *LoginResponse) InitDefault() {
-}
-
-var LoginResponse_Data_DEFAULT *model.UserInfo
-
-func (p *LoginResponse) GetData() (v *model.UserInfo) {
-	if !p.IsSetData() {
-		return LoginResponse_Data_DEFAULT
-	}
-	return p.Data
 }
 
 var LoginResponse_Base_DEFAULT *model.BaseResp
@@ -759,25 +750,34 @@ func (p *LoginResponse) GetBase() (v *model.BaseResp) {
 	return p.Base
 }
 
-var fieldIDToName_LoginResponse = map[int16]string{
-	1: "data",
-	2: "base",
+var LoginResponse_Data_DEFAULT *model.UserInfo
+
+func (p *LoginResponse) GetData() (v *model.UserInfo) {
+	if !p.IsSetData() {
+		return LoginResponse_Data_DEFAULT
+	}
+	return p.Data
 }
 
-func (p *LoginResponse) IsSetData() bool {
-	return p.Data != nil
+var fieldIDToName_LoginResponse = map[int16]string{
+	1: "base",
+	2: "data",
 }
 
 func (p *LoginResponse) IsSetBase() bool {
 	return p.Base != nil
 }
 
+func (p *LoginResponse) IsSetData() bool {
+	return p.Data != nil
+}
+
 func (p *LoginResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetData bool = false
 	var issetBase bool = false
+	var issetData bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -798,7 +798,7 @@ func (p *LoginResponse) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetData = true
+				issetBase = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -807,7 +807,7 @@ func (p *LoginResponse) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetBase = true
+				issetData = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -824,12 +824,12 @@ func (p *LoginResponse) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetData {
+	if !issetBase {
 		fieldId = 1
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetBase {
+	if !issetData {
 		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
@@ -852,19 +852,19 @@ RequiredFieldNotSetError:
 }
 
 func (p *LoginResponse) ReadField1(iprot thrift.TProtocol) error {
-	_field := model.NewUserInfo()
-	if err := _field.Read(iprot); err != nil {
-		return err
-	}
-	p.Data = _field
-	return nil
-}
-func (p *LoginResponse) ReadField2(iprot thrift.TProtocol) error {
 	_field := model.NewBaseResp()
 	if err := _field.Read(iprot); err != nil {
 		return err
 	}
 	p.Base = _field
+	return nil
+}
+func (p *LoginResponse) ReadField2(iprot thrift.TProtocol) error {
+	_field := model.NewUserInfo()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Data = _field
 	return nil
 }
 
@@ -902,10 +902,10 @@ WriteStructEndError:
 }
 
 func (p *LoginResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("data", thrift.STRUCT, 1); err != nil {
+	if err = oprot.WriteFieldBegin("base", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.Data.Write(oprot); err != nil {
+	if err := p.Base.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -919,10 +919,10 @@ WriteFieldEndError:
 }
 
 func (p *LoginResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("base", thrift.STRUCT, 2); err != nil {
+	if err = oprot.WriteFieldBegin("data", thrift.STRUCT, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := p.Base.Write(oprot); err != nil {
+	if err := p.Data.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

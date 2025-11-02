@@ -9,5 +9,6 @@ const (
 	TypeKey         = "type"
 )
 const (
-	RedisDBUser = 0
+	RedisDBUser  = 0
+	RedisDBEvent = 1
 )

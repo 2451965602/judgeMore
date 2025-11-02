@@ -159,5 +159,13 @@ func (svc *UserService) VerifyEmail(data *model.EmailAuth) (err error) {
 		return errors.New("code not match")
 	}
 	// 更新user表的信息
-	return mysql.ActivateUser(svc.ctx, data.Uid)
+	err = mysql.ActivateUser(svc.ctx, data.Uid)
+	if err != nil {
+		return err
+	}
+	err = cache.DeleteCodeCache(svc.ctx, key)
+	if err != nil {
+		return err
+	}
+	return nil
 }

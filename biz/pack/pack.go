@@ -38,7 +38,7 @@ func SendFailResponse(c *app.RequestContext, err errno.ErrNo) {
 	response := Response{
 		Base: baseResp,
 	}
-	SendResponse(c, response)
+	c.JSON(consts.StatusBadRequest, response)
 }
 
 func ChangeFormat(timeStr string) string {

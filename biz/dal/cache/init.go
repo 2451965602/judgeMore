@@ -6,11 +6,16 @@ import (
 	"judgeMore/pkg/constants"
 )
 
-var ca *redis.Client
+var userCa *redis.Client
+var eventCa *redis.Client
 
 func Init() {
 	var err error
-	ca, err = client.NewRedisClient(constants.RedisDBUser)
+	userCa, err = client.NewRedisClient(constants.RedisDBUser)
+	if err != nil {
+		panic(err)
+	}
+	eventCa, err = client.NewRedisClient(constants.RedisDBEvent)
 	if err != nil {
 		panic(err)
 	}

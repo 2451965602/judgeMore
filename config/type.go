@@ -56,14 +56,6 @@ type redis struct {
 	Password string
 }
 
-type oss struct {
-	Endpoint        string
-	AccessKeyID     string `mapstructure:"accessKey-id"`
-	AccessKeySecret string `mapstructure:"accessKey-secret"`
-	BucketName      string
-	MainDirectory   string `mapstructure:"main-directory"`
-}
-
 type elasticsearch struct {
 	Addr string
 	Host string
@@ -119,7 +111,18 @@ type rocketmq struct {
 type otel struct {
 	CollectorAddr string `mapstructure:"collector-addr"`
 }
-
+type openAI struct {
+	ApiKey   string `mapstructure:"api-key"`
+	ApiUrl   string `mapstructure:"api-url"`
+	ApiModel string `mapstructure:"api-model"`
+}
+type oss struct {
+	Bucket    string
+	AccessKey string
+	SecretKey string
+	Domain    string
+	Region    string
+}
 type config struct {
 	Server        server
 	Snowflake     snowflake
@@ -138,6 +141,8 @@ type config struct {
 	Rocketmq      rocketmq
 	Otel          otel
 	Administrator administrator
+	OpenAI        openAI
+	Oss           oss
 }
 
 type administrator struct {
