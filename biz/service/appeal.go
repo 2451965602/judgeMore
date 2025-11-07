@@ -71,6 +71,9 @@ func (svc *AppealService) DeleteAppeal(appeal_id string) error {
 	if appeal.UserId != stu_id {
 		return fmt.Errorf("user have not permission to delete appeal")
 	}
+	if appeal.Status != constants.WaitResult {
+		return fmt.Errorf("appeal cannot be deleted after handle")
+	}
 	// 删除
 	err = mysql.DeleteAppealById(svc.ctx, appeal_id)
 	if err != nil {
@@ -86,7 +89,7 @@ func (svc *AppealService) QueryAppealById(appeal_id string) (*model.Appeal, erro
 		return nil, fmt.Errorf("check event appeal failed: %w", err)
 	}
 	if !exist {
-		return nil, errno.NewErrNo(errno.ServiceAppealExistCode, "event not exist")
+		return nil, errno.NewErrNo(errno.ServiceAppealExistCode, "appeal not exist")
 	}
 	stu_id := GetUserIDFromContext(svc.c)
 	// 检验appeal属于user
@@ -107,4 +110,24 @@ func (svc *AppealService) QueryStuAllAppeals() ([]*model.Appeal, int64, error) {
 		return nil, -1, fmt.Errorf("query appeal failed: %w", err)
 	}
 	return appeals, count, nil
+}
+
+// 处理申诉
+func (svc *AppealService) HandleAppeal(appeal *model.Appeal) error {
+	// 常规检验存在性
+	exist, err := mysql.IsAppealExistByAppealId(svc.ctx, appeal.AppealId)
+	if err != nil {
+		return fmt.Errorf("check event appeal failed: %w", err)
+	}
+	if !exist {
+		return errno.NewErrNo(errno.ServiceAppealExistCode, "appeal not exist")
+	}
+	id := GetUserIDFromContext(svc.c)
+	appeal.UserId = id
+	err = mysql.UpdateAppealInfo(svc.ctx, appeal)
+	if err != nil {
+		return fmt.Errorf("update appeal failed: %w", err)
+	}
+	// 由于提供了修改接口，这边不在异步进行
+	return nil
 }

@@ -109,6 +109,17 @@ func UpdateEventStatus(ctx context.Context, event_id string, status int64) (*mod
 	}
 	return GetEventInfoById(ctx, event_id)
 }
+func UpdateEventLevel(ctx context.Context, event_id string, level string) error {
+	err := db.WithContext(ctx).
+		Table(constants.TableEvent).
+		Where("event_id = ?", event_id).
+		Update("event_level", level).
+		Error
+	if err != nil {
+		return errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to update userInfo: %v", err)
+	}
+	return nil
+}
 
 func buildEvent(data *Event) *model.Event {
 	return &model.Event{

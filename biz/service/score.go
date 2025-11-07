@@ -27,7 +27,7 @@ func (svc *ScoreService) QueryScoreRecordByScoreId(score_id string) (*model.Scor
 		return nil, fmt.Errorf("check score exist failed: %w", err)
 	}
 	if !exist {
-		return nil, errno.NewErrNo(errno.ServiceEventExistCode, "event not exist")
+		return nil, errno.NewErrNo(errno.ServiceEventExistCode, "Socre Result not exist")
 	}
 	recordInfo, err := mysql.QueryScoreRecordByScoreId(svc.ctx, score_id)
 	if err != nil {
@@ -42,7 +42,7 @@ func (svc *ScoreService) QueryScoreRecordByEventId(event_id string) (*model.Scor
 		return nil, fmt.Errorf("check score exist failed: %w", err)
 	}
 	if !exist {
-		return nil, errno.NewErrNo(errno.ServiceEventExistCode, "event not exist")
+		return nil, errno.NewErrNo(errno.ServiceEventExistCode, "Socre Result not exist")
 	}
 	recordInfo, err := mysql.QueryScoreRecordByEventId(svc.ctx, event_id)
 	if err != nil {
@@ -63,4 +63,20 @@ func (svc *ScoreService) QueryScoreRecordByStuId(stu_id string) ([]*model.ScoreR
 		return nil, count, fmt.Errorf("get record Info failed: %w", err)
 	}
 	return recordInfoList, count, nil
+}
+
+// 这个接口的权限问题还需要考虑
+func (svc *ScoreService) ReviseScore(result_id string, score float64) error {
+	exist, err := mysql.IsScoreRecordExist(svc.ctx, result_id)
+	if err != nil {
+		return fmt.Errorf("check score exist failed: %w", err)
+	}
+	if !exist {
+		return errno.NewErrNo(errno.ServiceEventExistCode, "Socre Result not exist")
+	}
+	err = mysql.UpdatesScore(svc.ctx, result_id, score)
+	if err != nil {
+		return fmt.Errorf("update score failed: %w", err)
+	}
+	return nil
 }

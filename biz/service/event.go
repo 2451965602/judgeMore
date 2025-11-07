@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/antlabs/strsim"
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"judgeMore/biz/dal/mysql"
 	"judgeMore/biz/service/model"
 	"judgeMore/biz/service/taskqueue"
@@ -83,6 +82,7 @@ func (svc *EventService) UpdateEventStatus(event_id string, status int64) (*mode
 	}
 	return info, nil
 }
+
 func (svc *EventService) UploadEventFile(file *multipart.FileHeader) (string, error) {
 	stu_id := GetUserIDFromContext(svc.c)
 	// 检测文件类型
@@ -102,7 +102,6 @@ func (svc *EventService) UploadEventFile(file *multipart.FileHeader) (string, er
 	if err != nil {
 		return "", fmt.Errorf("call glm4v with image failed: %w", err)
 	}
-	hlog.Info(Info)
 	if Info.Success == constants.AIErrorMessage {
 		return "", fmt.Errorf("image not a award or certificate")
 	}
@@ -130,6 +129,40 @@ func (svc *EventService) UploadEventFile(file *multipart.FileHeader) (string, er
 		return "", fmt.Errorf("create new event failed: %w", err)
 	}
 	return event_id, nil
+}
+
+func (svc *EventService) UpdateEventLevel(event_id string, level string, appeal_id string) error {
+	// 材料存在
+	exist, err := mysql.IsEventExist(svc.ctx, event_id)
+	if err != nil {
+		return fmt.Errorf("check event exist failed: %w", err)
+	}
+	if !exist {
+		return errno.NewErrNo(errno.ServiceEventExistCode, "event not exist")
+	}
+	// 材料是经过申诉
+	exist, err = mysql.IsAppealExistByAppealId(svc.ctx, appeal_id)
+	if err != nil {
+		return fmt.Errorf("check event appeal failed: %w", err)
+	}
+	if !exist {
+		return errno.NewErrNo(errno.ServiceAppealExistCode, "appeal not exist")
+	}
+	// 联查的话要查很远 但目前这样没办法判断申诉是否已完成 后期加上权限的问题会爆发一系列问题
+	recordInfo, err := mysql.QueryScoreRecordByEventId(svc.ctx, event_id)
+	if err != nil {
+		return errno.NewErrNo(errno.InternalDatabaseErrorCode, err.Error())
+	}
+	if recordInfo.AppealId != appeal_id {
+		return fmt.Errorf("appeal not match the event")
+	}
+	err = mysql.UpdateEventLevel(svc.ctx, event_id, level)
+	if err != nil {
+		return fmt.Errorf("update event level failed: %w", err)
+	}
+	// 再次异步计算
+	taskqueue.AddSyncScoreTask(svc.ctx, constants.EventKey, event_id)
+	return nil
 }
 
 func CheckEvent(ctx context.Context, eventInfo *model.Event) error {

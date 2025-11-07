@@ -79,6 +79,35 @@ func QueryScoreRecordByStuId(ctx context.Context, stuId string) ([]*model.ScoreR
 	return buildScoreList(Info), count, nil
 }
 
+func UpdatesScore(ctx context.Context, result_id string, score float64) error {
+	err := db.WithContext(ctx).
+		Transaction(func(tx *gorm.DB) error {
+			return tx.Table(constants.TableScore).
+				Where("result_id = ?", result_id).
+				Update("final_integral", score).
+				Update("status", "申诉完成").
+				Error
+		})
+	if err != nil {
+		return errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to update score: %v", err)
+	}
+	return nil
+}
+func UpdatesScoreByEventId(ctx context.Context, event_id string, score float64) error {
+	err := db.WithContext(ctx).
+		Transaction(func(tx *gorm.DB) error {
+			return tx.Table(constants.TableScore).
+				Where("event_id = ?", event_id).
+				Update("final_integral", score).
+				Update("status", "申诉完成").
+				Error
+		})
+	if err != nil {
+		return errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to update score: %v", err)
+	}
+	return nil
+}
+
 // 调用前用event_id查找一遍
 func CreateNewScoreRecord(ctx context.Context, record *model.ScoreRecord) error {
 	var r *ScoreResult

@@ -4,6 +4,7 @@ package score
 
 import (
 	"github.com/cloudwego/hertz/pkg/app"
+	"judgeMore/biz/router/auth"
 )
 
 func rootMw() []app.HandlerFunc {
@@ -39,4 +40,19 @@ func _queryscorebyeventidMw() []app.HandlerFunc {
 func _queryscorebystuidMw() []app.HandlerFunc {
 	// your code...
 	return nil
+}
+
+func _updateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _score0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _revisescoreMw() []app.HandlerFunc {
+	// your code...
+	return auth.Auth(1)
 }

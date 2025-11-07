@@ -76,3 +76,24 @@ func QueryScoreByStuId(ctx context.Context, c *app.RequestContext) {
 	resp.Base = pack.BuildBaseResp(errno.Success)
 	pack.SendResponse(c, resp)
 }
+
+// ReviseScore .
+// @router /api/update/score/id [POST]
+func ReviseScore(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req score.ReviseEventScoreRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := new(score.ReviseEventScoreResponse)
+	err = service.NewScoreService(ctx, c).ReviseScore(req.ResultID, req.Score)
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}

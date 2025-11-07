@@ -33,9 +33,11 @@ struct DeleteAppealResponse{
 }
 struct UpdateAppealRequest{
       1 :required string appeal_id,
+      2 :required string status,
+      3 :required string handled_result,
 }
 struct UpdateAppealResponse{
-
+      1: required model.BaseResp base,
 }
 
 service AppealService{

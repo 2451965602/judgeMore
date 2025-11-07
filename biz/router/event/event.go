@@ -34,6 +34,10 @@ func Register(r *server.Hertz) {
 		{
 			_update := _api.Group("/update", _updateMw()...)
 			{
+				_event := _update.Group("/event", _eventMw()...)
+				_event.POST("/level", append(_reviseeventlevelMw(), event.ReviseEventLevel)...)
+			}
+			{
 				_materials0 := _update.Group("/materials", _materials0Mw()...)
 				_materials0.POST("/auto", append(_uploadeventMw(), event.UploadEvent)...)
 				_materials0.POST("/file", append(_uploadeventfileMw(), event.UploadEventFile)...)

@@ -1495,7 +1495,9 @@ func (p *DeleteAppealResponse) String() string {
 }
 
 type UpdateAppealRequest struct {
-	AppealID string `thrift:"appeal_id,1,required" form:"appeal_id,required" json:"appeal_id,required" query:"appeal_id,required"`
+	AppealID      string `thrift:"appeal_id,1,required" form:"appeal_id,required" json:"appeal_id,required" query:"appeal_id,required"`
+	Status        string `thrift:"status,2,required" form:"status,required" json:"status,required" query:"status,required"`
+	HandledResult string `thrift:"handled_result,3,required" form:"handled_result,required" json:"handled_result,required" query:"handled_result,required"`
 }
 
 func NewUpdateAppealRequest() *UpdateAppealRequest {
@@ -1509,8 +1511,18 @@ func (p *UpdateAppealRequest) GetAppealID() (v string) {
 	return p.AppealID
 }
 
+func (p *UpdateAppealRequest) GetStatus() (v string) {
+	return p.Status
+}
+
+func (p *UpdateAppealRequest) GetHandledResult() (v string) {
+	return p.HandledResult
+}
+
 var fieldIDToName_UpdateAppealRequest = map[int16]string{
 	1: "appeal_id",
+	2: "status",
+	3: "handled_result",
 }
 
 func (p *UpdateAppealRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1518,6 +1530,8 @@ func (p *UpdateAppealRequest) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetAppealID bool = false
+	var issetStatus bool = false
+	var issetHandledResult bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1542,6 +1556,24 @@ func (p *UpdateAppealRequest) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetStatus = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetHandledResult = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1557,6 +1589,16 @@ func (p *UpdateAppealRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetAppealID {
 		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetStatus {
+		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetHandledResult {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1588,6 +1630,28 @@ func (p *UpdateAppealRequest) ReadField1(iprot thrift.TProtocol) error {
 	p.AppealID = _field
 	return nil
 }
+func (p *UpdateAppealRequest) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Status = _field
+	return nil
+}
+func (p *UpdateAppealRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.HandledResult = _field
+	return nil
+}
 
 func (p *UpdateAppealRequest) Write(oprot thrift.TProtocol) (err error) {
 
@@ -1598,6 +1662,14 @@ func (p *UpdateAppealRequest) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -1635,6 +1707,40 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
+func (p *UpdateAppealRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("status", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Status); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *UpdateAppealRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("handled_result", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.HandledResult); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *UpdateAppealRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1644,6 +1750,7 @@ func (p *UpdateAppealRequest) String() string {
 }
 
 type UpdateAppealResponse struct {
+	Base *model.BaseResp `thrift:"base,1,required" form:"base,required" json:"base,required" query:"base,required"`
 }
 
 func NewUpdateAppealResponse() *UpdateAppealResponse {
@@ -1653,12 +1760,28 @@ func NewUpdateAppealResponse() *UpdateAppealResponse {
 func (p *UpdateAppealResponse) InitDefault() {
 }
 
-var fieldIDToName_UpdateAppealResponse = map[int16]string{}
+var UpdateAppealResponse_Base_DEFAULT *model.BaseResp
+
+func (p *UpdateAppealResponse) GetBase() (v *model.BaseResp) {
+	if !p.IsSetBase() {
+		return UpdateAppealResponse_Base_DEFAULT
+	}
+	return p.Base
+}
+
+var fieldIDToName_UpdateAppealResponse = map[int16]string{
+	1: "base",
+}
+
+func (p *UpdateAppealResponse) IsSetBase() bool {
+	return p.Base != nil
+}
 
 func (p *UpdateAppealResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetBase bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1672,8 +1795,21 @@ func (p *UpdateAppealResponse) Read(iprot thrift.TProtocol) (err error) {
 		if fieldTypeId == thrift.STOP {
 			break
 		}
-		if err = iprot.Skip(fieldTypeId); err != nil {
-			goto SkipFieldTypeError
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetBase = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		}
 		if err = iprot.ReadFieldEnd(); err != nil {
 			goto ReadFieldEndError
@@ -1683,26 +1819,48 @@ func (p *UpdateAppealResponse) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
+	if !issetBase {
+		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-SkipFieldTypeError:
-	return thrift.PrependError(fmt.Sprintf("%T skip field type %d error", p, fieldTypeId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UpdateAppealResponse[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
 ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_UpdateAppealResponse[fieldId]))
+}
+
+func (p *UpdateAppealResponse) ReadField1(iprot thrift.TProtocol) error {
+	_field := model.NewBaseResp()
+	if err := _field.Read(iprot); err != nil {
+		return err
+	}
+	p.Base = _field
+	return nil
 }
 
 func (p *UpdateAppealResponse) Write(oprot thrift.TProtocol) (err error) {
 
+	var fieldId int16
 	if err = oprot.WriteStructBegin("UpdateAppealResponse"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
 		goto WriteFieldStopError
@@ -1713,10 +1871,29 @@ func (p *UpdateAppealResponse) Write(oprot thrift.TProtocol) (err error) {
 	return nil
 WriteStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
 WriteFieldStopError:
 	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
 WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *UpdateAppealResponse) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("base", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Base.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
 func (p *UpdateAppealResponse) String() string {

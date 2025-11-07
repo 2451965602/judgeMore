@@ -76,3 +76,13 @@ func _updateeventstatusMw() []app.HandlerFunc {
 	// your code...
 	return auth.Auth(1)
 }
+
+func _eventMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _reviseeventlevelMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

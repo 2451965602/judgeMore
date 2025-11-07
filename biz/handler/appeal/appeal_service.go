@@ -10,7 +10,6 @@ import (
 	"judgeMore/pkg/errno"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	appeal "judgeMore/biz/model/appeal"
 )
 
@@ -94,13 +93,22 @@ func UpdateAppealStatus(ctx context.Context, c *app.RequestContext) {
 	var req appeal.UpdateAppealRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "required file but found not "))
 		return
 	}
 
 	resp := new(appeal.UpdateAppealResponse)
-
-	c.JSON(consts.StatusOK, resp)
+	err = service.NewAppealService(ctx, c).HandleAppeal(&model.Appeal{
+		HandleResult: req.HandledResult,
+		Status:       req.Status,
+		AppealId:     req.AppealID,
+	})
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
 }
 
 // QueryStuAppealInfo .

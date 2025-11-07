@@ -120,3 +120,24 @@ func UpdateEventStatus(ctx context.Context, c *app.RequestContext) {
 	resp.Base = pack.BuildBaseResp(errno.Success)
 	pack.SendResponse(c, resp)
 }
+
+// ReviseEventLevel .
+// @router /api/update/event/level [POST]
+func ReviseEventLevel(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req event.ReviseEventLevelRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := new(event.ReviseEventLevelResponse)
+	err = service.NewEventService(ctx, c).UpdateEventLevel(req.EventID, req.EventLevel, req.AppealID)
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}

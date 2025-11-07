@@ -115,7 +115,7 @@ CREATE TABLE `appeals`  (
                             `appeal_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '申诉类型：分级异议/积分异议',
                             `appeal_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '申诉理由',
                             `attachment_path` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '佐证材料路径',
-                            `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'pending' COMMENT '状态：pending, approved, rejected',
+                            `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'pending' COMMENT '状态：pending, approved, rejected,deleted',
                             `handled_by` varchar(50) NULL DEFAULT NULL COMMENT '处理人（辅导员)ID',
                             `handled_at` datetime NULL DEFAULT NULL COMMENT '处理时间',
                             `handled_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '处理结果说明',
@@ -124,7 +124,7 @@ CREATE TABLE `appeals`  (
                             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                             `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
                             PRIMARY KEY (`appeal_id`) USING BTREE
-) ENGINE = InnoDB 20500 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '存储学生对审核结果的申诉记录' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20500 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '存储学生对审核结果的申诉记录' ROW_FORMAT = Dynamic;
 -- ----------------------------
 -- 第三步：创建依赖最多的表
 -- ----------------------------

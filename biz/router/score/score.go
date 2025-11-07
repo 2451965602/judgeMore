@@ -28,5 +28,12 @@ func Register(r *server.Hertz) {
 				_score.GET("/stu", append(_queryscorebystuidMw(), score.QueryScoreByStuId)...)
 			}
 		}
+		{
+			_update := _api.Group("/update", _updateMw()...)
+			{
+				_score0 := _update.Group("/score", _score0Mw()...)
+				_score0.POST("/id", append(_revisescoreMw(), score.ReviseScore)...)
+			}
+		}
 	}
 }
