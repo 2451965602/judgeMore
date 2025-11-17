@@ -117,7 +117,9 @@ struct QueryRecognizeRewardResponse{
                 1: required model.BaseResp base,
                 2: required model.RecognizeRewardList data,
 }
-
+// 查看积分计算规则
+// 新增积分计算规则
+// 删除积分计算规则
 service maintainService{
      QueryAllCollegeResponse QueryCollege(1: QueryAllCollegeRequest req) (api.get = "/api/admin/colleges"),
      QueryMajorByCollegeIdResponse QueryMajorByCollegeId(1: QueryMajorByCollegeIdRequest req) (api.get = "/api/admin/majors"),
