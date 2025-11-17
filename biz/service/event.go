@@ -196,7 +196,7 @@ func CheckEvent(ctx context.Context, eventInfo *model.Event) error {
 	}
 	// 设置最低相似度阈值
 	const minSimilarity = 0.5
-	var bestMatch *mysql.RecognizedEvent
+	var bestMatch *model.RecognizedEvent
 	var highestSimilarity float64
 	// 遍历所有事件，计算相似度
 	for _, v := range wholeEvent {
