@@ -4,7 +4,6 @@ package maintain
 
 import (
 	"context"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"judgeMore/biz/pack"
 	"judgeMore/biz/service"
 	"judgeMore/biz/service/model"
@@ -172,13 +171,19 @@ func UploadRecognizedReward(ctx context.Context, c *app.RequestContext) {
 	var req maintain.UploadRecognizedRewardRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
 		return
 	}
 
 	resp := new(maintain.UploadRecognizedRewardResponse)
-
-	c.JSON(consts.StatusOK, resp)
+	info, err := service.NewMaintainService(ctx, c).NewRecognizedEvent(&model.RecognizedEvent{})
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Data = pack.RecognizedEvent(info)
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
 }
 
 // DeleteRecognizeReward .
@@ -188,13 +193,13 @@ func DeleteRecognizeReward(ctx context.Context, c *app.RequestContext) {
 	var req maintain.DeleteRecognizeRewardRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
 		return
 	}
 
 	resp := new(maintain.DeleteRecognizeRewardResponse)
-
-	c.JSON(consts.StatusOK, resp)
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
 }
 
 // QueryRecognizeReward .

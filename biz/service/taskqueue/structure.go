@@ -28,7 +28,11 @@ func AddUpdateInsertStuTask(ctx context.Context, key string, r *model.Relation) 
 		return updateAdminStu(ctx, r)
 	}})
 }
-
+func AddUpdateRecognizedTask(ctx context.Context, key string) {
+	taskQueue.Add(key, taskqueue.QueueTask{Execute: func() error {
+		return updateCacheRecognizedEvent(ctx)
+	}})
+}
 func updateCacheRelation(ctx context.Context) error {
 	relationList, _, err := mysql.QueryAllRelation(ctx)
 	if err != nil {
@@ -57,6 +61,17 @@ func updateCacheCollege(ctx context.Context) error {
 		return err
 	}
 	err = cache.CollegeToCache(ctx, collegeList)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func updateCacheRecognizedEvent(ctx context.Context) error {
+	re, _, err := mysql.QueryRecognizedEvent(ctx)
+	if err != nil {
+		return err
+	}
+	err = cache.RecognizeEventToCache(ctx, re)
 	if err != nil {
 		return err
 	}

@@ -5,6 +5,7 @@ import (
 	"judgeMore/biz/service/model"
 	"judgeMore/pkg/constants"
 	"judgeMore/pkg/errno"
+	"time"
 )
 
 func QueryRecognizedEvent(ctx context.Context) ([]*model.RecognizedEvent, int64, error) {
@@ -19,6 +20,40 @@ func QueryRecognizedEvent(ctx context.Context) ([]*model.RecognizedEvent, int64,
 		return nil, -1, errno.NewErrNo(errno.InternalDatabaseErrorCode, "mysql:failed to query reconized_event"+err.Error())
 	}
 	return buildRecognizedList(reconize_event), total, nil
+}
+func AddRecognizedEvent(ctx context.Context, re *model.RecognizedEvent) (*model.RecognizedEvent, error) {
+	recognizedEvent := &RecognizedEvent{
+		RecognizedLevel:     re.RecognizedLevel,
+		RecognizedEventName: re.RecognizedEventName,
+		RecognizedEventTime: re.RecognizedEventTime,
+		RecognitionBasis:    re.RecognitionBasis,
+		RelatedMajors:       re.RelatedMajors,
+		ApplicableMajors:    re.ApplicableMajors,
+		IsActive:            re.IsActive,
+		Organizer:           re.Organizer,
+		College:             re.College,
+		CreatedAt:           time.Now(),
+		UpdatedAt:           time.Now(),
+	}
+	err := db.WithContext(ctx).
+		Table(constants.TableReconizedEvent).
+		Create(&recognizedEvent).
+		Error
+	if err != nil {
+		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "mysql:failed to create new recgnized event")
+	}
+	return buildRecognizeEvent(recognizedEvent), nil
+}
+func DeleteRecognized(ctx context.Context, id string) error {
+	err := db.WithContext(ctx).
+		Table(constants.TableReconizedEvent).
+		Where("RecognizedEventId = ?", id).
+		Delete(&RecognizedEvent{IsActive: false}).
+		Error
+	if err != nil {
+		return errno.NewErrNo(errno.InternalDatabaseErrorCode, "mysql:failed to delete recgnized event")
+	}
+	return nil
 }
 
 func buildRecognizeEvent(data *RecognizedEvent) *model.RecognizedEvent {

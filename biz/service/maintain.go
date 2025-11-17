@@ -194,3 +194,14 @@ func (svc *MaintainService) QueryRecognizedReward(page_num, page_size int64) ([]
 	}
 	return data[startIndex:endIndex], count, nil
 }
+
+func (svc *MaintainService) NewRecognizedEvent(re *model.RecognizedEvent) (*model.RecognizedEvent, error) {
+	// 无法对新增信息做保证有效的存在性查询
+	re.IsActive = true
+	info, err := mysql.AddRecognizedEvent(svc.ctx, re)
+	if err != nil {
+		return nil, err
+	}
+	taskqueue.AddUpdateRecognizedTask(svc.ctx, constants.StructKey)
+	return info, nil
+}
