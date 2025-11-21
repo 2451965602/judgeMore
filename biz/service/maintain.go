@@ -28,7 +28,7 @@ func NewMaintainService(ctx context.Context, c *app.RequestContext) *MaintainSer
 
 // 查找所有学院的信息
 func (svc *MaintainService) QueryColleges(page_num, page_size int64) ([]*model.College, int64, error) {
-	if utils.VerifyPageParam(page_num, page_size) {
+	if !utils.VerifyPageParam(page_num, page_size) {
 		return nil, -1, errno.NewErrNo(errno.ParamVerifyErrorCode, "Page Param invalid")
 	}
 	collegeInfoList, err := QueryAllCollege(svc.ctx)
@@ -51,7 +51,7 @@ func (svc *MaintainService) QueryColleges(page_num, page_size int64) ([]*model.C
 }
 
 func (svc *MaintainService) QueryMajorByCollegeId(college_id int64, page_num, page_size int64) ([]*model.Major, int64, error) {
-	if utils.VerifyPageParam(page_num, page_size) {
+	if !utils.VerifyPageParam(page_num, page_size) {
 		return nil, -1, errno.NewErrNo(errno.ParamVerifyErrorCode, "Page Param invalid")
 	}
 	// 存在性检查
