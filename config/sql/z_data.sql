@@ -191,25 +191,6 @@ INSERT INTO `recognized_events` (
       ('人武部', '"爱我国防"福建省大学生演讲比赛', '中共福建省委宣传部、福建省教育厅等', '每年 8-12 月', '所有专业', '所有专业', '省级行政部门', '省级', 1, NOW(), NOW(), NULL),
       ('人武部', '福建省大学生军事技能比武', '福建省教育厅、福建省国防教育办公室', '每年 7月', '所有专业', '所有专业', '省级行政部门', '省级', 1, NOW(), NOW(), NULL);
 
-DROP TABLE IF EXISTS `event_rules`;
-CREATE TABLE `event_rules`  (
-                                `rule_id` int NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-                                `recognized_event_id` int NULL COMMENT '关联认定赛事ID',
-                                `event_level` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '国际级|国家级|省级|校级',
-                                `event_weight` decimal(5, 2) NOT NULL COMMENT '赛事权重系数',
-                                `integral` int NOT NULL COMMENT '对应基础积分',
-                                `rule_desc` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '规则说明',
-                                `is_editable` tinyint NOT NULL COMMENT '1 - 是 / 0 - 否',
-                                `is_active` tinyint(1) NULL DEFAULT 1 COMMENT '是否启用 1 - 是 / 0 - 否',
-                                `award_level` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '特等奖/一等奖/二等奖/三等奖/优秀奖',
-                                `award_level_weight` decimal(5, 2) NULL DEFAULT NULL COMMENT '奖项权重系数',
-                                `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-                                `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
-                                PRIMARY KEY (`rule_id`) USING BTREE,
-                                INDEX `idx_recognized_event_id`(`recognized_event_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 90900 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '赛事权重规则表' ROW_FORMAT = Dynamic;
-
 -- 插入测试数据到 event_rules 表
 INSERT INTO `event_rules` (
     `recognized_event_id`,
