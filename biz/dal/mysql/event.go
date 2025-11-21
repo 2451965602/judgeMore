@@ -34,7 +34,7 @@ func CreateNewEvent(ctx context.Context, event *model.Event) (string, error) {
 		EventLevel:     event.EventLevel,
 		MaterialUrl:    event.MaterialUrl,
 		AwardContent:   event.AwardContent,
-		MaterialStatus: "待审核",
+		MaterialStatus: "未被认定",
 		AwardLevel:     event.AwardLevel, //提取的内容并没有这项
 		AwardAt:        event.AwardTime,
 	}
@@ -124,6 +124,49 @@ func UpdateEventLevel(ctx context.Context, event_id string, level string) error 
 	return nil
 }
 
+// 用于追加异步云端上传和验证奖项内容
+func UpdateEventMessage(ctx context.Context, event *model.Event) error {
+	if event.MaterialStatus == "待审核" {
+		req := &Event{
+			MaterialUrl:    event.MaterialUrl,
+			RecognizedId:   event.RecognizeId,
+			MaterialStatus: event.MaterialStatus,
+			EventLevel:     event.EventLevel,
+			AwardLevel:     event.AwardLevel,
+		}
+		err := db.WithContext(ctx).Table(constants.TableEvent).Transaction(func(tx *gorm.DB) error {
+			return tx.Model(&Event{}).
+				Where(" event_id = ?", event.EventId). // 或者其他唯一标识字段
+				Updates(map[string]interface{}{
+					"material_url":    req.MaterialUrl,
+					"recognized_id":   req.RecognizedId,
+					"material_status": req.MaterialStatus,
+					"event_level":     req.EventLevel,
+					"award_level":     req.AwardLevel,
+				}).Error
+		})
+		if err != nil {
+			return errno.NewErrNo(errno.InternalDatabaseErrorCode, "UpdateEventMessage Error:"+err.Error())
+		}
+		return nil
+	}
+	req := &Event{
+		MaterialUrl:  event.MaterialUrl,
+		RecognizedId: event.RecognizeId,
+	}
+	err := db.WithContext(ctx).Table(constants.TableEvent).Transaction(func(tx *gorm.DB) error {
+		return tx.Model(&Event{}).
+			Where(" event_id = ?", event.EventId). // 或者其他唯一标识字段
+			Updates(map[string]interface{}{
+				"material_url":  req.MaterialUrl,
+				"recognized_id": req.RecognizedId,
+			}).Error
+	})
+	if err != nil {
+		return errno.NewErrNo(errno.InternalDatabaseErrorCode, "UpdateEventMessage Error:"+err.Error())
+	}
+	return nil
+}
 func buildEvent(data *Event) *model.Event {
 	return &model.Event{
 		EventId:        data.EventId,

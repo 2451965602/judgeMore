@@ -103,8 +103,7 @@ CREATE TABLE `student_events`  (
                                    PRIMARY KEY (`event_id`) USING BTREE,
                                    INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
                                    INDEX `idx_material_status`(`material_status` ASC) USING BTREE,
-                                   INDEX `idx_recognized_id`(`recognized_id` ASC) USING BTREE,
-                                   CONSTRAINT `student_events_ibfk_2` FOREIGN KEY (`recognized_id`) REFERENCES `recognized_events` (`recognized_event_id`) ON DELETE SET NULL ON UPDATE RESTRICT
+                                   INDEX `idx_recognized_id`(`recognized_id` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 30000 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学生赛事材料表' ROW_FORMAT = Dynamic;
 
 DROP TABLE IF EXISTS `appeals`;
