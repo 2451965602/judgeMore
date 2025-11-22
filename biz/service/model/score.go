@@ -48,6 +48,18 @@ type ViewRecognizedRewardReq struct {
 	OrganizerName     *string
 	RecognizedEventId *string
 }
+type StuScoreMessage struct {
+	Uid     string
+	Name    string
+	Grade   string
+	College string
+	Score   float64
+}
+type ScoreRankReq struct {
+	StuName string
+	Grade   string
+	College string
+}
 
 func (p *ViewRecognizedRewardReq) IsSetEventName() bool {
 	return p.EventName != nil

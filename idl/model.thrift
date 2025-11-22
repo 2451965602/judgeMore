@@ -133,3 +133,14 @@ struct RuleList{
         1 : list <Rule> item,
         2: i64 total,
 }
+struct StuScoreMessage{
+    1: string stu_id,
+    2: string stu_name,
+    3: string college,
+    4: string grade //学年
+    5: double Score
+}
+struct StuScoreMessageList{
+    1: list<StuScoreMessage> item
+    2: i64 total
+}

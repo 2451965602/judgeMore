@@ -6,6 +6,7 @@ import (
 	"context"
 	"judgeMore/biz/pack"
 	"judgeMore/biz/service"
+	"judgeMore/biz/service/model"
 	"judgeMore/pkg/errno"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -94,6 +95,32 @@ func ReviseScore(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, errno.ConvertErr(err))
 		return
 	}
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// ScoreRank .
+// @router /api/score/query/rank [GET]
+func ScoreRank(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req score.ScoreRankRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := new(score.ScoreRankResponse)
+	info, count, err := service.NewScoreService(ctx, c).ScoreRank(&model.ScoreRankReq{
+		StuName: req.GetStuName(),
+		College: req.GetCollege(),
+		Grade:   req.GetGrade(),
+	})
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+	resp.Data = pack.StuScoreMessageList(info, count)
 	resp.Base = pack.BuildBaseResp(errno.Success)
 	pack.SendResponse(c, resp)
 }

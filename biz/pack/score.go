@@ -34,3 +34,23 @@ func ScoreRecordList(data []*model.ScoreRecord, total int64) *resp.ScoreRecordLi
 		Sum:   sum,
 	}
 }
+
+func StuScoreMessage(data *model.StuScoreMessage) *resp.StuScoreMessage {
+	return &resp.StuScoreMessage{
+		StuID:   data.Uid,
+		StuName: data.Name,
+		College: data.College,
+		Grade:   data.Grade,
+		Score:   data.Score,
+	}
+}
+func StuScoreMessageList(data []*model.StuScoreMessage, c int64) *resp.StuScoreMessageList {
+	info := make([]*resp.StuScoreMessage, 0)
+	for _, v := range data {
+		info = append(info, StuScoreMessage(v))
+	}
+	return &resp.StuScoreMessageList{
+		Item:  info,
+		Total: c,
+	}
+}

@@ -109,8 +109,47 @@ func UpdateInfoByRoleId(ctx context.Context, role_id string, element ...string) 
 
 	return GetUserInfoByRoleId(ctx, role_id)
 }
-
-func QueryUserByMajor(ctx context.Context, major, grade string) ([]string, error) {
+func QueryUserByUserName(ctx context.Context, name string) ([]*model.User, error) {
+	var user []*User
+	err := db.WithContext(ctx).
+		Table(constants.TableUser).Where("user_name = ?", name).
+		Find(&user).Error
+	if err != nil {
+		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "query userinfo by username error: "+err.Error())
+	}
+	return buildUserList(user), nil
+}
+func QueryUserByCollege(ctx context.Context, college string) ([]*model.User, error) {
+	var user []*User
+	err := db.WithContext(ctx).
+		Table(constants.TableUser).Where("college = ?", college).
+		Find(&user).Error
+	if err != nil {
+		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "query userinfo by username error: "+err.Error())
+	}
+	return buildUserList(user), nil
+}
+func QueryUserByUserGrade(ctx context.Context, grade string) ([]*model.User, error) {
+	var user []*User
+	err := db.WithContext(ctx).
+		Table(constants.TableUser).Where("grade = ?", grade).
+		Find(&user).Error
+	if err != nil {
+		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "query userinfo by grade error: "+err.Error())
+	}
+	return buildUserList(user), nil
+}
+func QueryAllStu(ctx context.Context) ([]*model.User, error) {
+	var user []*User
+	err := db.WithContext(ctx).
+		Table(constants.TableUser).Where("user_role = ?", "student").
+		Find(&user).Error
+	if err != nil {
+		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "query userinfo by major error: "+err.Error())
+	}
+	return buildUserList(user), nil
+}
+func QueryUserIdByMajor(ctx context.Context, major, grade string) ([]string, error) {
 	var stuIds []string
 	err := db.WithContext(ctx).
 		Table(constants.TableUser).
@@ -122,7 +161,7 @@ func QueryUserByMajor(ctx context.Context, major, grade string) ([]string, error
 	}
 	return stuIds, nil
 }
-func QueryUserByCollege(ctx context.Context, college string) ([]string, error) {
+func QueryUserIdByCollege(ctx context.Context, college string) ([]string, error) {
 	var stuIds []string
 	err := db.WithContext(ctx).
 		Table(constants.TableUser).
@@ -144,4 +183,28 @@ func ActivateUser(ctx context.Context, uid string) error {
 		return errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to activate user: %v", err)
 	}
 	return nil
+}
+
+func buildUserInfo(userInfo *User) *model.User {
+	return &model.User{
+		Uid:      userInfo.RoleId,
+		UserName: userInfo.UserName,
+		Grade:    userInfo.Grade,
+		Major:    userInfo.Major,
+		College:  userInfo.College,
+		Password: userInfo.Password,
+		Status:   userInfo.Status,
+		Email:    userInfo.Email,
+		Role:     userInfo.UserRole,
+		UpdateAT: userInfo.UpdatedAt.Unix(),
+		CreateAT: userInfo.CreatedAt.Unix(),
+		DeleteAT: 0,
+	}
+}
+func buildUserList(userInfo []*User) []*model.User {
+	re := make([]*model.User, 0)
+	for _, v := range userInfo {
+		re = append(re, buildUserInfo(v))
+	}
+	return re
 }

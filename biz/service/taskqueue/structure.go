@@ -84,7 +84,7 @@ func updateCacheRecognizedEvent(ctx context.Context) error {
 }
 func updateAdminStu(ctx context.Context, r *model.Relation) error {
 	if r.CollegeName != "" {
-		stuList, err := mysql.QueryUserByCollege(ctx, r.CollegeName)
+		stuList, err := mysql.QueryUserIdByCollege(ctx, r.CollegeName)
 		if err != nil {
 			return err
 		}
@@ -94,7 +94,7 @@ func updateAdminStu(ctx context.Context, r *model.Relation) error {
 		}
 		return nil
 	} else {
-		stuList, err := mysql.QueryUserByMajor(ctx, r.MajorName, r.Grade)
+		stuList, err := mysql.QueryUserIdByMajor(ctx, r.MajorName, r.Grade)
 		if err != nil {
 			return err
 		}

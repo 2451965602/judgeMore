@@ -29,10 +29,17 @@ func Register(r *server.Hertz) {
 			}
 		}
 		{
+			_score0 := _api.Group("/score", _score0Mw()...)
+			{
+				_query0 := _score0.Group("/query", _query0Mw()...)
+				_query0.GET("/rank", append(_scorerankMw(), score.ScoreRank)...)
+			}
+		}
+		{
 			_update := _api.Group("/update", _updateMw()...)
 			{
-				_score0 := _update.Group("/score", _score0Mw()...)
-				_score0.POST("/id", append(_revisescoreMw(), score.ReviseScore)...)
+				_score1 := _update.Group("/score", _score1Mw()...)
+				_score1.POST("/id", append(_revisescoreMw(), score.ReviseScore)...)
 			}
 		}
 	}

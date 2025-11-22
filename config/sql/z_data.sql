@@ -384,4 +384,52 @@ INSERT INTO `major` (`college_id`, `major_name`) VALUES
 INSERT INTO `users` (`user_name`, `user_role`, `role_id`, `email`, `college`, `password`, `major`, `grade`, `status`) VALUES
                                                                                                                           ('管理员', 'admin', '123456789', '123456789@qq.com', '', '$2a$10$j1VVQc/ZtHanv3MuzbMqt.RRyy37w4Dp6BFxbNMqk4NYU90q5L94G', NULL, NULL, 1),
                                                                                                                           ('汪老师', 'counselor', '202300220', '202300220@qq.com', '', '$2a$10$1/yfrqhqXlByo3x/pZHrcetQ1NjiQH9u4y9OWAi4CWiE81zTkq2LG', NULL, NULL, 1),
-                                                                                                                          ('张宇亮', 'student', '102300220', '102300220@fzu.edu.cn', '计算机与大数据学院', '$2a$10$j0RTugTzuWEShBdmMUktz.LCki3AUFye8Giri4J78Wbm5IjF4pD/u', '软件工程', '23', 1);
+                                                                                                                          ('张宇亮', 'student', '102300220', '102300220@fzu.edu.cn', '计算机与大数据学院', '$2a$10$j0RTugTzuWEShBdmMUktz.LCki3AUFye8Giri4J78Wbm5IjF4pD/u', '软件工程', '2023', 1),
+                                                                                                                          ('张小红', 'student', '102300201', '102300201@fzu.edu.cn', '计算机与大数据学院', '$2a$10$j0RTugTzuWEShBdmMUktz.LCki3AUFye8Giri4J78Wbm5IjF4pD/u', '软件工程', '2024', 1),
+                                                                                                                          ('张小东', 'student', '102300202', '102300202@fzu.edu.cn', '外国语学院', '$2a$10$j0RTugTzuWEShBdmMUktz.LCki3AUFye8Giri4J78Wbm5IjF4pD/u', '日语', '2023', 1),
+                                                                                                                      ('张小西', 'student', '102300203', '102300203@fzu.edu.cn', '外国语学院', '$2a$10$j0RTugTzuWEShBdmMUktz.LCki3AUFye8Giri4J78Wbm5IjF4pD/u', '日语', '2024', 1),
+                                                                                                                        ('张小明', 'student', '102300200', '102300200@fzu.edu.cn', '计算机与大数据学院', '$2a$10$j0RTugTzuWEShBdmMUktz.LCki3AUFye8Giri4J78Wbm5IjF4pD/u', '软件工程', '2023', 1);
+INSERT INTO `student_events` (
+    `user_id`,
+    `recognized_id`,
+    `event_name`,
+    `event_organizer`,
+    `event_level`,
+    `award_level`,
+    `award_content`,
+    `award_at`,
+    `material_url`,
+    `material_status`,
+    `auto_extracted`
+) VALUES
+      (102300220, -1, '2019全国移动互联创新大赛（江苏赛区）', '全国移动互联网创新大赛组委会', '', '', '高校组一等奖', '2019年7月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300220/102300220_1763802636', '未被认定', 1),
+      (102300220, -1, '2021第13届全国大学生广告艺术大赛', '中国高等教育学会广告教育专业委员会', '', '', '优秀奖', '2021年9月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300220/102300220_1763802654', '未被认定', 1),
+      (102300220, -1, '第十届全国大学生机械创新设计大赛慧鱼组竞赛暨慧鱼工程技术创新大赛(2022)', '全国大学生机械创新设计大赛组委会', '', '', '一等奖', '2022', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300220/102300220_1763802668', '未被认定', 1),
+      (102300220, 80883, '第十六届中国大学生生物物理学术竞赛', '中国大学生物理学术竞赛组委会', '国家级', '二等奖', '二等奖', '2025年8月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300220/102300220_1763802684', '已审核', 1),
+      (102300220, 80866, '全国大学生生命科学竞赛（2022，创新创业类）', '全国大学生生命科学竞赛委员会', '国家级', '二等奖', '二等奖', '2022年8月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300220/102300220_1763802699', '已审核', 1),
+      (102300200, 80828, '微瑞杯第二届全国大学生化学实验创新设计大赛总决赛', '中国化学会教育部高等学校国家级实验教学示范中心联席会', '省级', '一等奖', '一等奖', '2021年8月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300200/102300200_1763802729', '已审核', 1),
+      (102300201, 80809, '全国大学生统计建模大赛', '中国统计教育学会', '国家级', '一等奖', '一等奖', '2017年12月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300201/102300201_1763802752', '已审核', 1),
+      (102300202, -1, '第二十四届中国机器人及人工智能大赛全国总决赛', '中国机器人及人工智能大赛组委会', '', '', '二等奖', '2023年8月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300202/102300202_1763802774', '未被认定', 1),
+      (102300202, 80876, '2019全国移动互联创新大赛（江苏赛区）', '全国移动互联网大赛组委会', '省级', '一等奖', '高校组一等奖', '2019年7月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300202/102300202_1763802787', '已审核', 1),
+      (102300203, -1, '第十八届全国大学生智能汽车竞赛', '中国自动化学会', '', '', '三等奖', '2023年5月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300203/102300203_1763802816', '未被认定', 1),
+      (102300203, -1, '第十届全国大学生机械创新设计大赛慧鱼组竞赛暨慧鱼工程技术创新大赛(2022)', '全国大学生机械创新设计大赛组委会', '', '', '一等奖', '2022年5月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300203/102300203_1763802829', '未被认定', 1),
+      (102300203, 80822, '第十一届福建省大学生程序设计竞赛', '福建省计算机学会', '省级', '二等奖', '铜奖', '2024年5月', 'http://t53acv9du.hn-bkt.clouddn.com/event/102300203/102300203_1763802862', '已审核', 1);
+
+
+
+
+
+INSERT INTO `integral_results` (
+    `event_id`,
+    `user_id`,
+    `rule_id`,
+    `appeal_id`,
+    `final_integral`,
+    `status`
+) VALUES
+      (30003, 102300220, 90942, '', 96.80, '正常'),
+      (30004, 102300220, 90942, '', 96.80, '正常'),
+      (30005, 102300200, 90911, '', 64.00, '正常'),
+      (30006, 102300201, 90929, '', 132.25, '正常'),
+      (30008, 102300202, 90911, '', 64.00, '正常'),
+      (30011, 102300203, 90934, '', 72.20, '正常');
