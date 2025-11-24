@@ -33,6 +33,11 @@ func AddUpdateRecognizedTask(ctx context.Context, key string) {
 		return updateCacheRecognizedEvent(ctx)
 	}})
 }
+func AddUpdateRuleTask(ctx context.Context, key string) {
+	taskQueue.Add(key, taskqueue.QueueTask{Execute: func() error {
+		return updateCacheRule(ctx)
+	}})
+}
 func updateCacheRelation(ctx context.Context) error {
 	relationList, _, err := mysql.QueryAllRelation(ctx)
 	if err != nil {
@@ -79,7 +84,7 @@ func updateCacheRecognizedEvent(ctx context.Context) error {
 }
 func updateAdminStu(ctx context.Context, r *model.Relation) error {
 	if r.CollegeName != "" {
-		stuList, err := mysql.QueryUserByCollege(ctx, r.CollegeName)
+		stuList, err := mysql.QueryUserIdByCollege(ctx, r.CollegeName)
 		if err != nil {
 			return err
 		}
@@ -89,7 +94,7 @@ func updateAdminStu(ctx context.Context, r *model.Relation) error {
 		}
 		return nil
 	} else {
-		stuList, err := mysql.QueryUserByMajor(ctx, r.MajorName, r.Grade)
+		stuList, err := mysql.QueryUserIdByMajor(ctx, r.MajorName, r.Grade)
 		if err != nil {
 			return err
 		}
@@ -99,4 +104,15 @@ func updateAdminStu(ctx context.Context, r *model.Relation) error {
 		}
 		return nil
 	}
+}
+func updateCacheRule(ctx context.Context) error {
+	re, _, err := mysql.GetScoreRule(ctx)
+	if err != nil {
+		return err
+	}
+	err = cache.RuleToCache(ctx, re)
+	if err != nil {
+		return err
+	}
+	return nil
 }

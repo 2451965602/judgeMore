@@ -1,12 +1,12 @@
 package utils
 
 const (
-	Grade20 = "20"
-	Grade21 = "21"
-	Grade22 = "22"
-	Grade23 = "23"
-	Grade24 = "24"
-	Grade25 = "25"
+	Grade20 = "2020"
+	Grade21 = "2021"
+	Grade22 = "2022"
+	Grade23 = "2023"
+	Grade24 = "2024"
+	Grade25 = "2025"
 )
 
 func IsGradeValid(grade string) bool {

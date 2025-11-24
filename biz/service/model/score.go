@@ -8,6 +8,7 @@ type ScoreRule struct {
 	Integral          int64   `json:"integral"`
 	RuleDesc          string  `json:"rule_desc"`
 	IsEditable        bool    `json:"is_editable"`
+	IsActive          int
 	AwardLevel        string  `json:"award_level"`
 	AwardLevelWeight  float64 `json:"award_level_weight"`
 	CreateAT          int64
@@ -46,6 +47,18 @@ type ViewRecognizedRewardReq struct {
 	EventName         *string
 	OrganizerName     *string
 	RecognizedEventId *string
+}
+type StuScoreMessage struct {
+	Uid     string
+	Name    string
+	Grade   string
+	College string
+	Score   float64
+}
+type ScoreRankReq struct {
+	StuName string
+	Grade   string
+	College string
 }
 
 func (p *ViewRecognizedRewardReq) IsSetEventName() bool {

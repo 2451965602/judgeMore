@@ -117,16 +117,14 @@ struct QueryRecognizeRewardResponse{
                 1: required model.BaseResp base,
                 2: required model.RecognizeRewardList data,
 }
-
 // 上传积分权重的接口
 struct UploadRuleRequest{
-    1: required i64 recognized_event_id,
+    1: optional i64 recognized_event_id,
     2: required string event_level, // 国际级|国家级|省级|校级
-    3: required string  event_weight, // 赛事权重系数
+    3: required double  event_weight, // 赛事权重系数
     4: required i64 integral, // 对应基础积分
     5: required string rule_desc, // 规则说明
     6: required string award_level, // 特等奖/一等奖/二等奖/三等奖/优秀奖
-    7: required double award_level_weight  // 奖项权重系数
 }
 
 struct UploadRuleResponse{
@@ -151,7 +149,18 @@ struct QueryRuleRequest{
 
 struct QueryRuleResponse{
      1: required model.BaseResp base,
-     2: required model.Rule data,
+     2: required model.RuleList data,
+}
+struct UpdateRuleRequest{
+        1: required string rule_id,
+        3: optional double  event_weight, // 赛事权重系数
+        4: optional i64 integral, // 对应基础积分
+        5: optional string rule_desc, // 规则说明
+
+}
+struct UpdateRuleResponse{
+        1: required model.BaseResp base,
+        2: required model.Rule data,
 }
 service maintainService{
      QueryAllCollegeResponse QueryCollege(1: QueryAllCollegeRequest req) (api.get = "/api/admin/colleges"),
@@ -166,5 +175,6 @@ service maintainService{
      UploadRuleResponse UploadRule(1:UploadRuleRequest req)(api.post="/api/admin/rule/upload"),
      DeleteRuleResponse DeleteRule(1:DeleteRuleRequest req)(api.delete = "/api/admin/rule/delete"),
      QueryRuleResponse QueryRule(1:QueryRuleRequest req)(api.get = "/api/admin/rule/query"),
+     UpdateRuleResponse UpdateRule(1:UpdateRuleRequest req)(api.put="/api/admin/rule/update"),
 }
 

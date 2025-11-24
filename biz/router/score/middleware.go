@@ -56,3 +56,18 @@ func _revisescoreMw() []app.HandlerFunc {
 	// your code...
 	return auth.Auth(2)
 }
+
+func _query0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _scorerankMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _score1Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

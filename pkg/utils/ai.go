@@ -81,7 +81,7 @@ func CallGLM4VWithImage(ctx context.Context, imagePath string, apiKey string) (*
   "success": "true/false"
   "event_name": "竞赛全称",
   "event_sponsor": "主办单位",
-  "event_time": "竞赛时间（如：2024年5月）",
+  "event_time": "竞赛时间（只提取到月 如：2024年5月）",
   "award_level": "获得奖项（如：一等奖）"
 }
 如果某项无法识别，请留空对应字符串。请注意你需要对图片进行判断，如果你判断图片显然不是荣誉证书或者奖状，无法识别出任何赛事或奖项信息，"success"为"false"，否则返回"true"`

@@ -6,6 +6,7 @@ import (
 	"judgeMore/biz/dal/mysql"
 	"judgeMore/biz/service/model"
 	"judgeMore/pkg/errno"
+	"judgeMore/pkg/utils"
 )
 
 type ScoreService struct {
@@ -92,4 +93,107 @@ func (svc *ScoreService) ReviseScore(result_id string, score float64) error {
 		return err
 	}
 	return nil
+}
+
+// TODO:代码写的可读性很不好，有兴趣可以优化一下
+func (svc *ScoreService) ScoreRank(req *model.ScoreRankReq) ([]*model.StuScoreMessage, int64, error) {
+	var users []*model.User
+	var err error
+	// 参数检验
+	if req.StuName == "" && req.Grade == "" && req.College == "" {
+		users, err = mysql.QueryAllStu(svc.ctx)
+		if err != nil {
+			return nil, 0, err
+		}
+	}
+	if req.College != "" {
+		collegeExist, err := IsCollegeExist(svc.ctx, req.College)
+		if err != nil {
+			return nil, 0, err
+		}
+		if !collegeExist {
+			return nil, 0, errno.NewErrNo(errno.ServiceCollegeNotExistCode, "college not exist")
+		}
+	} else if req.Grade != "" {
+		if !utils.IsGradeValid(req.Grade) {
+			return nil, 0, errno.NewErrNo(errno.ServiceGradeNotExistCode, "invalid grade")
+		}
+	}
+	// 按优先级：姓名 → 学院 → 年级 逐步过滤
+	if req.StuName != "" {
+		users, err = mysql.QueryUserByUserName(svc.ctx, req.StuName)
+		if err != nil {
+			return nil, 0, err
+		}
+		if len(users) == 0 {
+			return nil, 0, nil
+		}
+	}
+
+	if req.College != "" {
+		if users != nil {
+			// 在现有用户基础上按学院内存过滤
+			filtered := make([]*model.User, 0)
+			for _, user := range users {
+				if user.College == req.College {
+					filtered = append(filtered, user)
+				}
+			}
+			users = filtered
+		} else {
+			// 直接查询学院
+			users, err = mysql.QueryUserByCollege(svc.ctx, req.College)
+			if err != nil {
+				return nil, 0, err
+			}
+		}
+		if len(users) == 0 {
+			return nil, 0, nil
+		}
+	}
+
+	if req.Grade != "" {
+		if users != nil {
+			// 在现有用户基础上按年级内存过滤
+			filtered := make([]*model.User, 0)
+			for _, user := range users {
+				if user.Grade == req.Grade {
+					filtered = append(filtered, user)
+				}
+			}
+			users = filtered
+		} else {
+			// 直接查询年级
+			users, err = mysql.QueryUserByUserGrade(svc.ctx, req.Grade)
+			if err != nil {
+				return nil, 0, err
+			}
+		}
+		if len(users) == 0 {
+			return nil, 0, nil
+		}
+	}
+	// 以学生为单位查询积分
+	var result []*model.StuScoreMessage
+	var count int64
+	for _, u := range users {
+		temp := &model.StuScoreMessage{
+			Uid:     u.Uid,
+			Name:    u.UserName,
+			Grade:   u.Grade,
+			College: u.College,
+		}
+		var sum float64
+		scoreList, _, err := mysql.QueryScoreRecordByStuId(svc.ctx, u.Uid)
+		if err != nil {
+			return nil, 0, err
+		}
+		for _, s := range scoreList {
+			sum += s.FinalIntegral
+		}
+		temp.Score = sum
+		result = append(result, temp)
+		count++
+	}
+	return result, count, nil
 }
