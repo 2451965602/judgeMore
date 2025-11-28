@@ -148,3 +148,12 @@ struct StuScoreMessageList{
     1: list<StuScoreMessage> item
     2: i64 total
 }
+struct Feedback{
+    1: string type
+    2: string content,
+    3: string user_id
+}
+struct FeedbackList{
+    1:list<Feedback>item,
+    2:i64 total,
+}
